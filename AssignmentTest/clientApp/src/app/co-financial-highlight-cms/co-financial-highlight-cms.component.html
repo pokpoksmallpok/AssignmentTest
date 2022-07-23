@@ -1,0 +1,164 @@
+ <div class="card">
+  <div class="card-header">Financial Highlight CMS</div>
+  <div class="card-body">
+    <h3 class="card-title">Search criteria</h3>
+    <div class="row justify-content-center">
+      <div class="col-sm-auto">
+        <span>Year</span>
+      </div>
+      <div class="col-sm-2">
+        <input type="number" [(ngModel)]="modelSearch.Years" class="form-control" id="yearSearch" />
+      </div>
+      <div class="col-sm-auto">
+        <span>Status</span>
+      </div>
+      <div class="col-sm-2">
+        <select class="form-select" id="statusSearch" aria-label="Default select example" [(ngModel)]="modelSearch.StatusId">
+          <option selected value="99" >select Status</option>
+          <option *ngFor="let item of dataListStatusTemp"  value="{{item.statusId}}">{{item.statusName}}</option> 
+        </select>
+         
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-sm-auto">
+        <button class="btn btn-primary" type="submit" (click)="getListData()">Submit search</button>
+      </div>
+    </div>
+    <hr />
+    <div class="row">
+      <div class="col-sm">
+        <h4>List of financial highlights</h4>
+      </div>
+      <div class="col-sm-auto">
+        <button class="btn btn-primary" type="button" (click)="openFormModal()">
+          Add
+        </button>
+      </div>
+    </div> 
+    <div class="row">
+      <div class="col-sm">
+        <table class="table table-bordered">
+          <thead class="table-active">
+            <tr>
+              <th scope="col" style="width: 10%">Year</th>
+              <th scope="col" style="width: 20%">Total Asset</th>
+              <th scope="col" style="width: 20%">Total Liabilities</th>
+              <th scope="col" style="width: 20%">Total Equities</th>
+              <th scope="col" style="width: 10%">Status</th>
+              <th scope="col" style="width: 20%">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of dataListTemp">
+              <td>{{item.years}}</td>
+              <td>{{item.totalAsset}}</td>
+              <td>{{item.totalLiabilities}}</td>
+              <td>{{item.totalEquities}}</td>
+              <td>{{item.statusName}}</td>
+              <td>
+                <div class="row justify-content-center">
+                  <div class="col-sm-auto">
+                    <button class="btn btn-warning" (click)="editData(item)" type="submit">Edit</button>
+                  </div>
+                  <div class="col-sm-auto">
+                    <button class="btn btn-danger" (click)="deleteData(item)" type="submit">Delete</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+             
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     aria-labelledby="formModalLabel"
+     aria-hidden="true" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="formModalLabel">
+          Financial Highlights Form
+        </h3>
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+      <form  class="row g-3 needs-validation" name="formInput"   novalidate>
+        <div class="modal-body">
+          <div class="container-fluid"> 
+            <div class="row">
+              <div class="col-sm form-group">
+                <label for="yearInput">Year</label>
+                <input type="number" class="form-control" name="yearI" id="yearInput" [(ngModel)]="modelInput.Years" [ngModelOptions]="{standalone: true}" required>
+                <div class="invalid-feedback">
+                  Please provide a year.
+                </div> 
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm form-group">
+                <label for="totalAInput">Total Asset (Baht)</label>
+                <input type="number" class="form-control" id="totalAInput" name="totalA" [(ngModel)]="modelInput.TotalAsset" [ngModelOptions]="{standalone: true}" required>
+                <div class="invalid-feedback">
+                  Please provide a total asset.
+                </div> 
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm form-group">
+                <label for="totalLInput">Total Liabilities (Baht)</label>
+                <input type="number" class="form-control" id="totalLInput" name="totalL" [(ngModel)]="modelInput.TotalLiabilities" [ngModelOptions]="{standalone: true}" required>
+                <div class="invalid-feedback">
+                  Please provide a total liabilities.
+                </div> 
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm form-group">
+                <label for="totalEInput">Total Equities (Baht)</label>
+                <input type="number" class="form-control" id="totalEInput" name="totalE" [(ngModel)]="modelInput.TotalEquities" [ngModelOptions]="{standalone: true}" required>
+                <div class="invalid-feedback">
+                  Please provide a total equities.
+                </div>  
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm form-group form-check">
+                <input type="checkbox" class="form-check-input" name="ActiveCheck" [(ngModel)]="checkActive" id="ActiveCheck" [ngModelOptions]="{standalone: true}">
+                <label class="form-check-label" for="exampleCheck1">Active</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="row">
+            <div class="col-sm-auto">
+              <button type="button" name="btnCancel"
+                      class="btn btn-danger"
+                      data-bs-dismiss="modal">
+                Cancel
+              </button>
+            </div>
+            <div class="col-sm-auto">
+              <button type="button" class="btn btn-warning" name="btnClear" (click)="clearData()">clear</button>
+            </div>
+            <div class="col-sm-auto"> 
+              <button type="submit" (click)="savedata()" name="btnSubmit"
+                      class="btn btn-primary">
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
