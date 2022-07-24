@@ -15,13 +15,16 @@ export class CoFinancialHighlightCmsComponent implements OnInit {
   dataListTemp: any;
   dataListStatusTemp: any;
   modelInput: TbFinalcailHighlight = {};
-  modelSearch: TbFinalcailHighlight = { Years:0,StatusId:99};
-  checkActive?: boolean = true;
-  checkVa: any;
+  modelSearch: TbFinalcailHighlight = { Years: 0, StatusId: 99 };
+  modelGetdata: TbFinalcailHighlight = { Years: 0, StatusId: 99 };
+  checkActive?: boolean = true; 
   constructor(private ApiAssignmentService: ApiAssignmentService) { 
   }
 
   ngOnInit(): void {
+ 
+    console.log('pok', this.checkDuplicateYear(2022));
+  
     this.getListData();
     this.getListStatusData(); 
     this.formModal = new window.bootstrap.Modal(
@@ -30,6 +33,15 @@ export class CoFinancialHighlightCmsComponent implements OnInit {
   } 
 
   async savedata() {
+    var checkCondition: boolean = true;
+
+    //if (this.validateForm() == false) {
+    //  checkCondition = false;
+    //} else {
+      
+    
+    //}
+
     if (this.validateForm() == true ) {
       if (this.checkActive == true) {
         this.modelInput.StatusId = 1;
@@ -57,6 +69,18 @@ export class CoFinancialHighlightCmsComponent implements OnInit {
       });  
     } 
   }
+
+  async checkDuplicateYear(year: any) {
+      var dataList: any[]=[];
+      var result:any;
+    await this.ApiAssignmentService.loadList(this.modelGetdata).subscribe(data => {
+      dataList.push(data);
+      result = dataList.filter(item => item[0].years == year); 
+    });
+
+    return false; 
+  }
+   
 
    validateForm (){ 
     var forms = document.querySelectorAll('.needs-validation');
@@ -97,10 +121,7 @@ export class CoFinancialHighlightCmsComponent implements OnInit {
     });
   }
 
-  async searchData() {
-
-  }
-
+   
   openFormModal() {
     this.modelInput = {}; 
     this.formModal.show();

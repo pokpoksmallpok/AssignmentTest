@@ -23,8 +23,7 @@ export class CoFinancialHighlightDisplayComponent implements OnInit {
    
   async getDataChart() { 
     await this.ApiAssignmentService.loadChart().subscribe(data => { //เรียกใช้API
-      this.dataChart = data;
-      console.log(this.dataChart);
+      this.dataChart = data; 
       this.canvas = document.getElementById('myChart');
       this.ctx = this.canvas.getContext('2d');
       let myChart = new Chart(this.ctx, {
@@ -112,15 +111,25 @@ export class CoFinancialHighlightDisplayComponent implements OnInit {
               stacked: true,
             },
             y: {
-              beginAtZero: true
+              beginAtZero: true,
+              title: {
+                display: true,
+                text:'Million Baht'
+              }
             }
           },
+          interaction: {
+            mode:'index'
+          },
           plugins: {
+            legend: {
+              position:'bottom'
+            },
             tooltip: {
               callbacks: { 
-                label: function (context) {
+                label: function (context) { 
                   let label = context.dataset.label || '';
-
+                 
                   if (label) {
                     label += ': ';
                   }

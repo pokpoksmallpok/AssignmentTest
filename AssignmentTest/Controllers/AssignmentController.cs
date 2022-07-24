@@ -152,26 +152,32 @@ namespace AssignmentTest.Controllers
             var model_set = new model_data(); 
             try
             {
-                if (tbFinalcailHighlight.Id != 0)
+                model_set = ValidateData(tbFinalcailHighlight);
+
+                if (model_set.resultCode != "FAIL")
                 { 
-                    tbFinalcailHighlight.UpdateDate = DateTime.Now;
-                    _context.Update(tbFinalcailHighlight);
-                    _context.SaveChanges(); 
-                }
-                else
-                {
-                    tbFinalcailHighlight.CreateDate = DateTime.Now;
-                    tbFinalcailHighlight.UpdateDate = DateTime.Now;
-                    _context.Add(tbFinalcailHighlight);
-                    _context.SaveChanges(); 
+                    if (tbFinalcailHighlight.Id != 0)
+                    {
+                        tbFinalcailHighlight.UpdateDate = DateTime.Now;
+                        _context.Update(tbFinalcailHighlight);
+                        _context.SaveChanges();
+                    }
+                    else
+                    {
+                        tbFinalcailHighlight.CreateDate = DateTime.Now;
+                        tbFinalcailHighlight.UpdateDate = DateTime.Now;
+                        _context.Add(tbFinalcailHighlight);
+                        _context.SaveChanges();
+                    }
+                    model_set.resultCode = "SUCCESS";
+                    model_set.resultMsg = "Submit";
                 }
 
-                model_set.resultCode = "SUCCESS";
-                model_set.resultMsg = "Submit";
+               
             }
             catch (InvalidCastException e)
             {
-                model_set.resultCode = "FAILL";
+                model_set.resultCode = "FAIL";
                 model_set.resultMsg = e.Message; 
             } 
             return model_set;
@@ -193,7 +199,7 @@ namespace AssignmentTest.Controllers
             }
             catch (InvalidCastException e)
             {
-                model_set.resultCode = "FAILL";
+                model_set.resultCode = "FAIL";
                 model_set.resultMsg = e.Message;
             } 
 
@@ -202,7 +208,7 @@ namespace AssignmentTest.Controllers
 
         [Route("search")]
         [HttpPost]
-        public List<dataTableChart> searchData(TbFinalcailHighlight tbFinalcailHighlight)
+        public List<dataTableChart> searchData( TbFinalcailHighlight tbFinalcailHighlight)
         {
             var dataTableChartSet = new List<dataTableChart>();
             var cnn = _context.Database.GetDbConnection();
@@ -233,6 +239,28 @@ namespace AssignmentTest.Controllers
             return dataTableChartSet;
         }
 
+        private model_data ValidateData(TbFinalcailHighlight tbFinalcailHighlight)
+        {
+            var modelData = new model_data();
+            try
+            {
+                var data = _context.TbFinalcailHighlights.Where(a => a.Years == tbFinalcailHighlight.Years && a.Id != tbFinalcailHighlight.Id).FirstOrDefault();
+                if (data != null)
+                {
+                    if (data.Years != 0 ) //Check year duplicate
+                    {
+                        modelData.resultCode = "FAIL";
+                        modelData.resultMsg += "Year " + data.Years + " duplicated  <br />";
+                    }
+                } 
+            } 
+            catch (InvalidCastException e)
+            { 
+
+            }
+             
+            return modelData;
+        }
     }
      
 }
